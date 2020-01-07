@@ -1,27 +1,36 @@
-const app = document.getElementById('root')
-const container = document.createElement('div')
-const logo = document.createElement('img')
-logo.src = './logo.png'
+const getApi = async url => {
+    const res = await fetch(url)
+    const data = res.json()
+    return data
+}
 
-container.setAttribute('class', 'container')
-app.appendChild(logo)
-app.appendChild(container)
+const main = async () => {
 
-fetch('https://ghibliapi.herokuapp.com/films')
-    .then(res => res.json())
-    .then(data => {
-        data.forEach(movie => {
-            const card = document.createElement('div')
-            const h1 = document.createElement('h1')
-            const p = document.createElement('p')
-            
-            card.setAttribute('class', 'card')
-            movie.description = movie.description.substring(0, 300)
-            h1.textContent = movie.title
-            p.textContent = `${movie.description}...`
+    const app = document.getElementById('root')
+    const container = document.createElement('div')
+    const logo = document.createElement('img')
+    logo.src = './assets/logo.png'
 
-            container.appendChild(card)
-            card.appendChild(h1)
-            card.appendChild(p)
-        })
+    container.setAttribute('class', 'container')
+    app.appendChild(logo)
+    app.appendChild(container)
+
+    const data = await getApi('https://ghibliapi.herokuapp.com/films')
+    data.map((movie, index) => {
+
+        const card = document.createElement('div')
+        const h1 = document.createElement('h1')
+        const p = document.createElement('p')
+
+        card.setAttribute('class', 'card')
+        movie.description = movie.description.substring(0, 300)
+        h1.textContent = movie.title
+        p.textContent = `${movie.description}...`
+
+        container.appendChild(card)
+        card.appendChild(h1)
+        card.appendChild(p)
     })
+}
+
+main()
